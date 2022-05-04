@@ -72,7 +72,7 @@ void Graph::DFS()
 		for (auto j = 1; j <= size_i; ++j)
 		{
 			auto t = nodes.begin() + nodes[i + j];
-			std::remove(t + 1, t + *t + 1, i);
+			static_cast<void>(std::remove(t + 1, t + *t + 1, i));
 			*(t + *t) = 0;
 			//--(*t);
 			nodes[i + j] = 0;

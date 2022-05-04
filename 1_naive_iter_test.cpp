@@ -182,7 +182,7 @@ void Graph::DFS()
 			//succint version
 			//auto k = nodes[nodes[i + j]];
 			auto t = nodes.begin() + nodes[i + j];
-			std::remove(t + 1, t + *t + 1, i);
+			static_cast<void>(std::remove(t + 1, t + *t + 1, i));
 			*(t + *t) = 0;
 			//nodes[nodes[i + j]]--;
 			//nodes[nodes[i + j]]--;

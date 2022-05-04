@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <windows.h>
+#include <algorithm>
 
 namespace ndfs_no_rem {
 	class Graph {

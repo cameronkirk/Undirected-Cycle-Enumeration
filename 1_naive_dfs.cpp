@@ -1,6 +1,6 @@
 #include "1_naive_dfs.h"
 using namespace ndfs;
-#define ENABLE_DEBUG
+
 Graph::Graph(int num_nodes, int search_depth) {
 	this->graph_size = num_nodes;
 	adj.resize(num_nodes);
@@ -14,23 +14,19 @@ void Graph::AddEdge(int v, int w) {
 }
 
 void Graph::Cycles(int v, int d) {
-	
-	//if (!visited[v])
-	{
-		visited[v] = true;
-		for (int i : adj[v]) {
-			#include "0_nodes_vis_counter.h"
-			if (i == rootnode) {
-				++cycles[d];
-			}
-			else if (d < max_depth) {
-				if (!visited[i]) {
-					Cycles(i, d + 1);
-				}
+	visited[v] = true;
+	for (int i : adj[v]) {
+		#include "0_nodes_vis_counter.h"
+		if (i == rootnode) {
+			++cycles[d];
+		}
+		else if (d < max_depth) {
+			if (!visited[i]) {
+				Cycles(i, d + 1);
 			}
 		}
-		visited[v] = false;
 	}
+	visited[v] = false;
 }
 
 void Graph::DFS(int rootNodeOrder)

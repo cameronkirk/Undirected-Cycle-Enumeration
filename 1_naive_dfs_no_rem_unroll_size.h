@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <windows.h>
+#include <algorithm>
 
 namespace ndfs_no_rem_unroll_size {
 	class Graph {
@@ -19,9 +20,6 @@ namespace ndfs_no_rem_unroll_size {
 		void RemoveNode(int node);
 		void DFS(int rootnode_order);
 		void AddEdge(int v, int w);
-
-
 	};
-
 	void Foo(std::string code_name, int depth, int rootnode_order);
 }
