@@ -20,7 +20,7 @@ Adding files as I clean them up, will comment/expedite upon request - afaik, end
 
 | |Halford| | | |Karimi| | | |
 |----:|----:|----:|----:|----:|----:|----:|----:|----:|
-|&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s&nbsp-s|Code A|Code B|Code C|Code D|Code A|Code B|Code C|Code D|
+|&nbsp-s &nbsp-s &nbsp-s &nbsp-s&nbsp-s &nbsp-s&nbsp-s &nbsp-s&nbsp-s &nbsp-s&nbsp-s &nbsp-s&nbsp-s &nbsp-s&nbsp-s &nbsp-s&nbsp-s &nbsp-s|Code A|Code B|Code C|Code D|Code A|Code B|Code C|Code D|
 | |816.3.174|816.55.178|PEGReg252x504|PEGirReg252x504|PEGirReg504x1008|PEGReg504x1008|8000.4000.3.483|10000.10000.3.631|
 | |10|10|12|10|10|14|10|10|
 |Recursive Naive DFS|0|0|0|0|0|0|0|0|
