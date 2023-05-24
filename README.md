@@ -27,7 +27,7 @@ Adding files as I clean them up, will comment/expedite upon request - afaik, end
 |Contig. Array NDFS |0|0|0|0|0|0|0|0|
 |Iterative Naive DFS|0|0|0|0|0|0|0|0|
 |Recursive Naive MULTI|0|0|0|0|0|0|0|0|
-|Recursive Naive DFS (no rem)|0|0|0|0|0|0|0|0|
+|Recursive Naive DFS (no rem)|0|0|0|0|0|0|0|0|
 |Recursive Naive DFS (unroll)|0|0|0|0|0|0|0|0|
 |Recursive NDFS (fixed size)|0|0|0|0|0|0|0|0|
 |Contig. Naive DFS (no rem)|0|0|0|0|0|0|0|0|
