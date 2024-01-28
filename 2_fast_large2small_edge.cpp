@@ -43,7 +43,7 @@ void Graph::RemoveNode(int node)
 
 void Graph::Cycles(int v, int depth) {
 	for (auto k : adj[v]) {
-#include "0_nodes_vis_counter.h"
+		#include "0_nodes_vis_counter.h"
 		if (!visited[k]) {
 			visited[k] = true;
 			const auto temp = adj[k].size();
@@ -51,13 +51,13 @@ void Graph::Cycles(int v, int depth) {
 			auto i = adj[k].begin();
 			if (*i == rootnode)
 			{
-#include "0_nodes_vis_counter.h"
+				#include "0_nodes_vis_counter.h"
 				cycles[depth]++;
 				++i;
 				++x;
 			}
 			for (x; x < temp; ++x, ++i) {
-#include "0_nodes_vis_counter.h"
+				#include "0_nodes_vis_counter.h"
 				if (!visited[*i]) {
 					if (depth + 2 < max_depth) {
 						visited[*i] = true;
@@ -67,7 +67,7 @@ void Graph::Cycles(int v, int depth) {
 					else {
 						for (auto j : adj[*i])
 						{
-#include "0_nodes_vis_counter.h"
+							#include "0_nodes_vis_counter.h"
 							if (adj[j][0] == rootnode)
 							{
 								if (!visited[j])
@@ -165,6 +165,17 @@ void Graph::DFS()
 		visited[startnode] = true;
 		rootnode = startnode;
 		int i = adjnode;
+
+		if (cycles[0] == 5)
+		{
+			std::cout << "\n|" << startnode << "|=" << adj[startnode].size() << " :: ";
+			for (auto k : adj[startnode])
+			{
+				std::cout << adj[k].size() << " ";
+			}std::cout << " :: |" << i << "|=" << adj[i].size() << "\n";
+		}
+
+
 		visited[i] = true;
 		for (auto j: adj[i]) {
 			if (!visited[j]) {
@@ -173,7 +184,7 @@ void Graph::DFS()
 				visited[j] = false;
 			}
 		}
-
+		#include "0_nodes_print_counter.h"
 		adj[i].erase(std::remove(adj[i].begin(), adj[i].end(), startnode), adj[i].end());
 		if (adj[i].size() == 1)
 			RemoveNode(i);
@@ -191,30 +202,45 @@ void Graph::DFS()
 
 void fast_l2s_edge::Foo(std::string codeName, int depth)
 {
+	//Import data to cpp
+	int n, k, max_row, max_col, temp;
+	std::vector<int> numbers;
 	std::ifstream myfile;
 	myfile.open(codeName);
-	int n, k, max_row, max_col;
 	myfile >> n >> k >> max_row >> max_col;
-	std::vector<int>numbers;
-	int num;
-	while (myfile >> num)
-		numbers.push_back(num);
+	while (myfile >> temp)
+		numbers.push_back(temp);
 	myfile.close();
+
 	//Build graph
-	Graph g = Graph(n + k, depth);
-	int i = 0, z = 0;
-	for (int x = n + k; x < n + k + max_row * n; x++) {
-		if (i == max_row) {
-			i = 0;
-			++z;
-		}
-		if (numbers[x] != 0)
-		{
-			g.AddEdge(z, numbers[x] + n - 1);
-			g.AddEdge(numbers[x] + n - 1, z);
-		}
-		++i;
+	int alist = 0;
+	if (codeName.substr(codeName.size() - 2) == ".a") {
+		alist = 1;
 	}
+	Graph g = Graph(n + k, depth);
+	int x = 0;
+	int y = n + k;
+	while (x < n)
+	{
+		for (int z = 0; z < max_row; z++)
+		{
+			if (numbers[y] > 0)
+			{
+				if (alist) {
+					g.AddEdge(x, numbers[y] + n - 1);
+					g.AddEdge(numbers[y] + n - 1, x);
+				}
+				else
+				{
+					g.AddEdge(x, numbers[y] - 1);
+				}
+
+			}
+			y++;
+		}
+		x++;
+	}
+
 	//REORDERING
 	std::vector<int>reorder;
 	int temp_max, temp_max_idx;
@@ -258,8 +284,8 @@ void fast_l2s_edge::Foo(std::string codeName, int depth)
 	for (int x = 0; x < n + k; x++)
 		rev_reorder[reorder[x]] = x;
 	Graph g2(n + k, depth);
-	i = 0;
-	z = 0;
+	int i = 0;
+	int z = 0;
 	for (int x = n + k; x < n + k + max_row * n; x++)
 	{
 		if (i == max_row)

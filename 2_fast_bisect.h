@@ -20,6 +20,10 @@ namespace fast_bisect
 		alignas(64) std::vector<char> visited;
 		alignas(64) std::vector<std::vector<unsigned short>> adj;
 		void Cycles(const int node, const int depth);
+		void SwapNode(unsigned short n1, unsigned short n2);
+		void CheckCross();
+		void RemoveParCross();
+		void RemoveVarCross();
 	public:
 		Graph(const int num_nodes, const int search_depth);  // Constructor
 		void Sort();

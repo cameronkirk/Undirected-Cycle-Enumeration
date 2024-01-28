@@ -39,7 +39,7 @@ void Graph::RemoveNode(int node)
 
 void Graph::Cycles(int v, int depth) {
 	for (auto k : adj[v]) {
-#include "0_nodes_vis_counter.h"
+		#include "0_nodes_vis_counter.h"
 		if (!visited[k]) {
 			visited[k] = true;
 			const auto temp = adj[k].size();
@@ -47,13 +47,13 @@ void Graph::Cycles(int v, int depth) {
 			auto i = (adj[k].begin());
 			if (*i == rootnode)
 			{
-#include "0_nodes_vis_counter.h"
+				#include "0_nodes_vis_counter.h"
 				cycles[depth]++;
 				++i;
 				++x;
 			}
 			for (x; x < temp; ++x, ++i) {
-#include "0_nodes_vis_counter.h"
+				#include "0_nodes_vis_counter.h"
 				if (!visited[*i]) {
 					if (depth + 2 < max_depth) {
 						visited[*i] = true;
@@ -63,7 +63,7 @@ void Graph::Cycles(int v, int depth) {
 					else {
 						for (auto j : adj[*i])
 						{
-#include "0_nodes_vis_counter.h"
+							#include "0_nodes_vis_counter.h"
 							if (adj[j][0] == rootnode)
 							{
 								if (!visited[j])
@@ -141,7 +141,7 @@ void Graph::DFS()
 			}
 		}
 		visited[i] = false;
-
+		#include "0_nodes_print_counter.h"
 		adj[i].erase(std::remove(adj[i].begin(), adj[i].end(), n1), adj[i].end());
 		adj[n1].erase(std::remove(adj[n1].begin(), adj[n1].end(), i), adj[n1].end());
 		if (adj[n1].size() == 1)
@@ -159,33 +159,45 @@ void Graph::DFS()
 void fast_randedge::Foo(std::string codeName, int depth)
 {
 	//Import data to cpp
+	int n, k, max_row, max_col, temp;
+	std::vector<int> numbers;
 	std::ifstream myfile;
 	myfile.open(codeName);
-	int n, k, max_row, max_col;
 	myfile >> n >> k >> max_row >> max_col;
-	std::vector<int>numbers;
-	int num;
-	while (myfile >> num)
-		numbers.push_back(num);
+	while (myfile >> temp)
+		numbers.push_back(temp);
 	myfile.close();
+
 	//Build graph
+	int alist = 0;
+	if (codeName.substr(codeName.size() - 2) == ".a") {
+		alist = 1;
+	}
 	Graph g = Graph(n + k, depth);
-	int i = 0, z = 0;
-	for (auto x = n + k; x < n + k + max_row * n; x++)
+	int x = 0;
+	int y = n + k;
+	while (x < n)
 	{
-		if (i == max_row)
+		for (int z = 0; z < max_row; z++)
 		{
-			i = 0;
-			z++;
+			if (numbers[y] > 0)
+			{
+				if (alist) {
+					g.AddEdge(x, numbers[y] + n - 1);
+					g.AddEdge(numbers[y] + n - 1, x);
+				}
+				else
+				{
+					g.AddEdge(x, numbers[y] - 1);
+				}
+
+			}
+			y++;
 		}
-		if (numbers[x] != 0)
-		{
-			g.AddEdge(z, numbers[x] + n - 1);
-			g.AddEdge(numbers[x] + n - 1, z);
-		}
-		i++;
+		x++;
 	}
 	std::vector<int>().swap(numbers);
+
 	g.Sort();
 	//Search for cycles, and start timers
 	LARGE_INTEGER freq, t1, t2;
