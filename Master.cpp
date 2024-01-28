@@ -137,66 +137,66 @@ int main()
 		//	how does node (or edge) iteration order affect the overall number of nodes visited and time taken?
 		if (true)
 		{
-			//		We note that the choice of iterating over either the parity or variable nodes, in either forwards or reverse makes a substantial  
-			//		difference in the runtime
+			//	We note that the choice of iterating over either the parity or variable nodes, in either forwards or reverse makes a substantial  
+			//	difference in the runtime
 			std::cout << std::setw(35) << "Recursive Naive DFS V  :: "; ndfs::Foo(tempStr, depth, 0); //vector of vectors
 			std::cout << std::setw(35) << "Recursive Naive DFS VR :: "; ndfs::Foo(tempStr, depth, 1); //vector of vectors
 			std::cout << std::setw(35) << "Recursive Naive DFS P  :: "; ndfs::Foo(tempStr, depth, 2); //vector of vectors
 			std::cout << std::setw(35) << "Recursive Naive DFS PR :: "; ndfs::Foo(tempStr, depth, 3); //vector of vectors
 
-	//		First we apply some low hanging fruit - easy optimisations that can be applied to improve dft cycle enumeration
+			//	First we apply some low hanging fruit - easy optimisations that can be applied to improve dft cycle enumeration
 			std::cout << std::setw(35) << "Fast - Variable Nodes :: "; fast_dfs::Foo(tempStr, depth, 0);
 			std::cout << std::setw(35) << "Fast - Var. Nodes Rev :: "; fast_dfs::Foo(tempStr, depth, 1);
 			std::cout << std::setw(35) << "Fast - Parity Nodes   :: "; fast_dfs::Foo(tempStr, depth, 2);
 			std::cout << std::setw(35) << "Fast - Par. Nodes Rev :: "; fast_dfs::Foo(tempStr, depth, 3);
 
-			//		Largest to smallest - choose next largest root node after all its edges have been processed:
+			//	Largest to smallest - choose next largest root node after all its edges have been processed:
 			std::cout << std::setw(35) << "Largest to Smallest   :: "; fast_l2s_vertex::Foo(tempStr, depth);
 
-			//		Sort nodes from smallest to largest:
+			//	Sort nodes from smallest to largest:
 			std::cout << std::setw(35) << "Smallest to Largest   :: "; fast_s2l_vertex::Foo(tempStr, depth);
 
-			//		Special version of smallest to largest:
-			//			if the startnode has degree 2, then of the two root-adjacent-nodes, one paths outwards and the other can only be used to path inwards, otherwise the root-node becomes unreachable.
-			//			So, instead of checking if we have reached the root-node, we can instead check if we have reached this returning root-adjacent node, thereby reducing the overall depth explored by one level.
-			//			We sort the edge lists so that this root-adjacent-node is the first member, therefore only have to check a single edge at the penultimate level. We undo this sort afterwards for the non-degree 2 enumeration.
+			//	Special version of smallest to largest:
+			//	if the startnode has degree 2, then of the two root-adjacent-nodes, one paths outwards and the other can only be used to path inwards, otherwise the root-node becomes unreachable.
+			//	So, instead of checking if we have reached the root-node, we can instead check if we have reached this returning root-adjacent node, thereby reducing the overall depth explored by one level.
+			//	We sort the edge lists so that this root-adjacent-node is the first member, therefore only have to check a single edge at the penultimate level. We undo this sort afterwards for the non-degree 2 enumeration.
 			std::cout << std::setw(35) << "S2L Deg2 Special Code :: "; fast_s2l_deg2::Foo(tempStr, depth);
 
-			//		Largest to Smallest node updated per edge:
-			//			Instead of starting searches from a chosen node, we can start from a chosen edge, trial starting from the largest node at each step
-			//			this search would be costly, so we minimise it as follows; Sort nodes into buckets accordant to their degree; at each iteration, 
-			//			take a node from the bucket of highest degree, check that node's degree still matches the bucket, if not; sort node into correct bucket 
-			//			and take another node.
+			//	Largest to Smallest node updated per edge:
+			//	Instead of starting searches from a chosen node, we can start from a chosen edge, trial starting from the largest node at each step
+			//	this search would be costly, so we minimise it as follows; Sort nodes into buckets accordant to their degree; at each iteration, 
+			//	take a node from the bucket of highest degree, check that node's degree still matches the bucket, if not; sort node into correct bucket 
+			//	and take another node.
 			std::cout << std::setw(35) << "L2S Updated each Edge :: "; fast_l2s_edge::Foo(tempStr, depth);
 
-			//		Experimental method to arrange nodes to minimise condition rootAdj_1 > rootAdj_2 for duplicate detection. 
-			//			if the root-node is the lowest named node x, then we arrange the graph such that the root-adjacent nodes are the next sequentially named nodes
-			//			ie. if there are k root-adjacent nodes, then if node y < x+k; then y is a root-adjacent node. So when iterating through the edgelist for the root-adjacent nodes, if y > x+k can break the search for that layer.
-			//			this essentially another precursor to distance collection and usage;
+			//	Experimental method to arrange nodes to minimise condition rootAdj_1 > rootAdj_2 for duplicate detection. 
+			//	if the root-node is the lowest named node x, then we arrange the graph such that the root-adjacent nodes are the next sequentially named nodes
+			//	ie. if there are k root-adjacent nodes, then if node y < x+k; then y is a root-adjacent node. So when iterating through the edgelist for the root-adjacent nodes, if y > x+k can break the search for that layer.
+			//	this essentially another precursor to distance collection and usage;
 			std::cout << std::setw(35) << "Minimise RAdj1 > RAdj2:: "; fast_sort_adj::Foo(tempStr, depth);
 
-			//		Choose node at random, at each edge iteration:
-			//			the performance similarity of this to bisection shows that the bisection method doesn't really work. Need to rewrite this to limit it to one set of nodes.
+			//	Choose node at random, at each edge iteration:
+			//	the performance similarity of this to bisection shows that the bisection method doesn't really work. Need to rewrite this to limit it to one set of nodes.
 			std::cout << std::setw(35) << "Random Node and Edge :: "; fast_randedge::Foo(tempStr, depth);
 
-			//		Bisect the graph as quickly as possible
-			//			Once the graph is split into two, you no longer do a lot of fruitless searching in the second partition.
-			//			this only works for (3,6) graphs currently, as follows: we split the graph into two halves, and sort the degree 3 nodes to minimise crossings; either 0, 1, 2 or 3 edges cross the boundary between the two halves
-			//			if two edges cross the boundary, then we swap the node with a node from the other side that also has 2 crossings; similarly, if 3 edges cross, we swap that with a corresponding node from across the partition
-			//			in total, the number of edges that cross is reduced to 1/4, down from 1/2. Can thus bisect the graph by removing 1/4 of the nodes (actually 1/4 - 1, as last edge cannot be part of any cycles).
- 			//			So, graph looks like so:
+			//	Bisect the graph as quickly as possible
+			//	Once the graph is split into two, you no longer do a lot of fruitless searching in the second partition.
+			//	this only works for (3,6) graphs currently, as follows: we split the graph into two halves, and sort the degree 3 nodes to minimise crossings; either 0, 1, 2 or 3 edges cross the boundary between the two halves
+			//	if two edges cross the boundary, then we swap the node with a node from the other side that also has 2 crossings; similarly, if 3 edges cross, we swap that with a corresponding node from across the partition
+			//	in total, the number of edges that cross is reduced to 1/4, down from 1/2. Can thus bisect the graph by removing 1/4 of the nodes (actually 1/4 - 1, as last edge cannot be part of any cycles).
+ 			//	So, graph looks like so:
 			// 
-			//			     XXXX | YYYY
-			//					  |
-			//			AA|BBBBBB | CCCCCC|DD
+			//			 XXXX | YYYY
+			//				  |
+			//		AA|BBBBBB | CCCCCC|DD
 			//
-			//			Nodes X/Y have 6 edges, nodes A/B/C/D have 3 edges
-			//			Nodes A connect to nodes X only.
-			//			Nodes D connect to nodes Y only.
-			//			Nodes B connect two edges to X, one edge to Y.
-			//			Nodes C connect two edges to Y, one edge to X.
-			//			This can be improved further, suppose that we start at in A, then from across the partition it is necessary to path Y-B-X-A or Y-C-X-B-X-A and we could apply these constraints. 
-			//			This leads into the next stage of optimisations.
+			//	Nodes X/Y have 6 edges, nodes A/B/C/D have 3 edges
+			//	Nodes A connect to nodes X only.
+			//	Nodes D connect to nodes Y only.
+			//	Nodes B connect two edges to X, one edge to Y.
+			//	Nodes C connect two edges to Y, one edge to X.
+			//	This can be improved further, suppose that we start at in A, then from across the partition it is necessary to path Y-B-X-A or Y-C-X-B-X-A and we could apply these constraints. 
+			//	This leads into the next stage of optimisations.
 			std::cout << std::setw(35) << "Targeted Bisection    :: "; fast_bisect::Foo(tempStr, depth);
 
 		}

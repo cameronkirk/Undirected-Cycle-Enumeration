@@ -1,0 +1,7 @@
+NUM CYCLES:
+
+Complete Graph
+https://oeis.org/A002807
+
+Wheel Graph
+https://oeis.org/A002061
