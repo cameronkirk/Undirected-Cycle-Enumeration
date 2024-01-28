@@ -16,7 +16,7 @@ void Graph::AddEdge(int v, int w) {
 void Graph::Cycles(int v, int d) {
 	visited[v] = true;
 	for (int i : adj[v]) {
-		#include "0_nodes_vis_counter.h"
+		//#include "0_nodes_vis_counter.h"
 		if (i == rootnode) {
 			++cycles[d];
 		}
@@ -29,62 +29,114 @@ void Graph::Cycles(int v, int d) {
 	visited[v] = false;
 }
 
+////WE CAN GET A SLIGHT SPEEDUP BY PULLING OUT THE DEPTH CHECK FROM THE LAST LEVEL OF RECURSION
+// 
+//void Graph::Cycles(int v, int d) {
+//	visited[v] = true;
+//	if (d < max_depth) {
+//		for (auto i : adj[v]) {
+//			if (i == rootnode) {
+//				cycles[d]++;
+//			}
+//			else
+//				if (!visited[i]) {
+//					Cycles(i, d + 1);
+//				}
+//		}
+//	}
+//	else
+//		for (auto i : adj[v]) {
+//			if (i == rootnode) {
+//				cycles[d]++;
+//			}
+//		}
+//	visited[v] = false;
+//}
+
+void Graph::RemoveNode(int node)
+{
+	std::vector<int> bfsq = { node };
+	while (!bfsq.empty())
+	{
+		int u = bfsq.back();
+		bfsq.pop_back();
+		for (auto u2 : adj[u])
+		{
+			adj[u2].erase(std::remove(adj[u2].begin(), adj[u2].end(), u), adj[u2].end());
+			if (size(adj[u2]) == 1)
+				bfsq.push_back(u2);
+		}
+		adj[u].clear();
+	}
+}
+
 void Graph::DFS(int rootNodeOrder)
 {
 	int start, end, it;
 	switch (rootNodeOrder) {
-	case 0:		start = 0;						end = 2 * graph_size / 3;		it =  1;	break;
+	case 0:		start = 0;						end = 2 * graph_size / 3;		it = 1;		break;
 	case 1:		start = 2 * graph_size / 3 - 1;	end = -1;						it = -1;	break;
-	case 2:		start = 2 * graph_size / 3;		end = graph_size;				it =  1;	break;
+	case 2:		start = 2 * graph_size / 3;		end = graph_size;				it = 1;		break;
 	case 3:		start = graph_size - 1;			end = 2 * graph_size / 3 - 1;	it = -1;	break;
-	default:	start = 0;						end = 2 * graph_size / 3;		it =  1;	break;
+	default:	start = 0;						end = graph_size;		it = 1;		break;
 	}
 	for (int i = start; i != end; i += it)
 	{
 		rootnode = i;
-		Cycles(i, 1);
+		Cycles(i, 1); 
 		visited[i] = true;
-		//Remove edges from adjacent nodes that point towards the root-node, then clear root-node
-		for (auto z : adj[i])
-			adj[z].erase(std::remove(adj[z].begin(), adj[z].end(), i), adj[z].end());
+		//RemoveNode(i);
+		#include "0_nodes_print_counter.h"
 		adj[i].clear();
 	}
 	//Output cycle count, we zero the count of degree-two cycles.
 	cycles[1] = 0; cycles[2] = 0;
 	for (auto k : cycles)
-		std::cout << k / 2 << ' ';
+		std::cout << k << ' ';
 }
 
 void ndfs::Foo(std::string codeName, int depth, int rootNodeOrder)
 {
 	//Import data to cpp
+	int n, k, max_row, max_col, temp;
+	std::vector<int> numbers;
 	std::ifstream myfile;
 	myfile.open(codeName);
-	int n, k, max_row, max_col;
 	myfile >> n >> k >> max_row >> max_col;
-	std::vector<int>numbers;
-	int num;
-	while (myfile >> num)
-		numbers.push_back(num);
+	while (myfile >> temp)
+		numbers.push_back(temp);
 	myfile.close();
+
 	//Build graph
+	int alist = 0;
+	if (codeName.substr(codeName.size() - 2) == ".a") {
+		alist = 1;
+	}
 	Graph g = Graph(n + k, depth);
-	int i = 0, z = 0;
-	for (auto x = n + k; x < n + k + max_row * n; x++)
+	int x = 0;
+	int y = n + k;
+	while (x < n)
 	{
-		if (i == max_row)
+		for (int z = 0; z < max_row; z++)
 		{
-			i = 0;
-			z++;
+			if (numbers[y] > 0)
+			{
+				if (alist) {
+					g.AddEdge(x, numbers[y] + n - 1);
+					g.AddEdge(numbers[y] + n - 1, x);
+				}
+				else
+				{
+					g.AddEdge(x, numbers[y] - 1);
+				}
+
+			}
+			y++;
 		}
-		if (numbers[x] != 0)
-		{
-			g.AddEdge(z, numbers[x] + n - 1);
-			g.AddEdge(numbers[x] + n - 1, z);
-		}
-		i++;
+		x++;
 	}
 	std::vector<int>().swap(numbers);
+
 	//Search for cycles, and start timers
 	LARGE_INTEGER freq, t1, t2;
 	QueryPerformanceFrequency(&freq);

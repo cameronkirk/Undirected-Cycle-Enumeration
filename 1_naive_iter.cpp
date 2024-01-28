@@ -114,31 +114,42 @@ void Graph::DFS()
 void ndfs_iter::Foo(std::string codeName, int depth) 
 {
 	//Import data to cpp
+	int n, k, max_row, max_col, temp;
+	std::vector<int> numbers;
 	std::ifstream myfile;
 	myfile.open(codeName);
-	int n, k, max_row, max_col;
 	myfile >> n >> k >> max_row >> max_col;
-	Graph g = Graph(n + k, depth);
-	std::vector<int>numbers;
-	int num;
-	while (myfile >> num)
-		numbers.push_back(num);
+	while (myfile >> temp)
+		numbers.push_back(temp);
 	myfile.close();
+
 	//Build graph
-	int i = 0, z = 0;
-	for (int x = n + k; x < n + k + max_row * n; x++)
+	int alist = 0;
+	if (codeName.substr(codeName.size() - 2) == ".a") {
+		alist = 1;
+	}
+	Graph g = Graph(n + k, depth);
+	int x = 0;
+	int y = n + k;
+	while (x < n)
 	{
-		if (i == max_row)
+		for (int z = 0; z < max_row; z++)
 		{
-			i = 0;
-			z++;
+			if (numbers[y] > 0)
+			{
+				if (alist) {
+					g.AddEdge(x, numbers[y] + n - 1);
+					g.AddEdge(numbers[y] + n - 1, x);
+				}
+				else
+				{
+					g.AddEdge(x, numbers[y] - 1);
+				}
+
+			}
+			y++;
 		}
-		if (numbers[x] != 0)
-		{
-			g.AddEdge(z, numbers[x] + n - 1);
-			g.AddEdge(numbers[x] + n - 1, z);
-		}
-		i++;
+		x++;
 	}
 	std::vector<int>().swap(numbers);
 	g.ConvertVectToArr();
@@ -151,7 +162,5 @@ void ndfs_iter::Foo(std::string codeName, int depth)
 
 	QueryPerformanceCounter(&t2);
 	std::cout << ":: " << (t2.QuadPart - t1.QuadPart) * 1.0 / freq.QuadPart << "\n";
-	
-	//end
 }
 
